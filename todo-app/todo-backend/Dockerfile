@@ -1,0 +1,15 @@
+FROM node:16
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node package*.json ./
+
+RUN npm ci
+
+COPY --chown=node:node . .
+
+ENV DEBUG=todo-backend:*
+
+USER node
+
+CMD npm start

@@ -8,7 +8,7 @@ RUN npm ci
 
 COPY --chown=node:node . .
 
-ENV DEBUG=todo-backend:*
+ENV DEBUG=todo-express-backend:*
 
 USER node
 

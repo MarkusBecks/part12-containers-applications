@@ -1,0 +1,24 @@
+# GET Todo by ID
+GET http://localhost:3000/todos/64e1e4d4d9f03eccb672d99a
+
+### PUT Todo by ID
+PUT http://localhost:3000/todos/64e1ea31a6fc5b31dc9a2a02
+Content-Type: application/json
+
+{
+  "text": "Updated Todo Text",
+  "done": true
+}
+
+### INSERT Todo
+POST http://localhost:3000/todos
+Content-Type: application/json
+
+{
+  "text": "Inserted Todo2",
+  "done": true
+}
+
+### DELETE Todo
+DELETE http://localhost:3000/todos/64e2537061cd094fa7e3318f
+

@@ -4,6 +4,7 @@ const router = express.Router()
 
 /* GET todos listing. */
 router.get('/', async (_, res) => {
+  console.log('GET ALL ROUTE')
   const todos = await Todo.find({})
   res.send(todos)
 })
@@ -20,8 +21,12 @@ router.post('/', async (req, res) => {
 const singleRouter = express.Router()
 
 const findByIdMiddleware = async (req, res, next) => {
+  console.log('findByIdMiddleware is called')
   const { id } = req.params
+  console.log('id: ', id)
+  console.log('type of id: ', typeof id)
   req.todo = await Todo.findById(id)
+  console.log('req.todo: ', req.todo)
   if (!req.todo) return res.sendStatus(404)
 
   next()
@@ -31,13 +36,16 @@ const findByIdMiddleware = async (req, res, next) => {
 singleRouter.delete('/', async (req, res) => {
   await req.todo.delete()
   res.sendStatus(200)
+  console.log('deleted')
 })
 
 /* GET todo. */
-singleRouter.get('/:id', async (req, res) => {
-  const todo = req.todo
+/* singleRouter.get('/', async (req, res) => {
+  res.send(req.todo)
+}) */
+singleRouter.get('/', async (req, res) => {
   try {
-    res.status(200).send(todo)
+    res.status(200).send(req.todo)
   } catch (error) {
     console.error(error)
     res.status(500).send({ message: 'Internal server error' })
@@ -45,18 +53,20 @@ singleRouter.get('/:id', async (req, res) => {
 })
 
 /* PUT todo. */
-singleRouter.put('/:id', async (req, res) => {
-  const updatedTodo = req.todo
-  const { text, done } = req.body
+singleRouter.put('/', async (req, res) => {
+  const { text, done } = req.body // Extract updated data from the req.body
+
+  // Update the todo with new data
+  req.todo.text = text
+  req.todo.done = done
+
   try {
-    await updatedTodo.save({
-      text,
-      done,
-    })
-    res.status(200).send(updatedTodo)
+    // Save the updated todo
+    const updatedTodo = await req.todo.save()
+
+    res.status(200).send(updatedTodo) // Send the updated todo as res
   } catch (error) {
-    console.error(error)
-    res.status(500).send({ message: 'Internal server error' })
+    res.status(500).send(error)
   }
 })
 

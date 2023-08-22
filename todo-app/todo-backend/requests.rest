@@ -15,8 +15,8 @@ POST http://localhost:3000/todos
 Content-Type: application/json
 
 {
-  "text": "Inserted Todo2",
-  "done": true
+  "text": "Inserted todo2",
+  "done": false
 }
 
 ### DELETE Todo

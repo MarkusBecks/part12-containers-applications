@@ -23,13 +23,6 @@ if (!REDIS_URL) {
   setAsync = promisify(client.set).bind(client)
 }
 
-/* async function initializeRedisKeys() {
-  // Init added_todos with an initial val of 0
-  await setAsync('added_todos', 0)
-}
-
-initializeRedisKeys() */
-
 module.exports = {
   getAsync,
   setAsync,

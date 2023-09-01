@@ -2,3 +2,7 @@
 .gitignore
 node_modules
 Dockerfile
+
+# Exclude MongoDB and Redis data folders
+mongo_data
+redis_data

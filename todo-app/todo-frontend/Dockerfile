@@ -1,13 +1,17 @@
-# The first FROM is now a stage called build-stage
-
 FROM node:16 AS build-stage
 WORKDIR /usr/src/app
 
-COPY . .
+# Copy only package.json and package-lock.json first for caching dependencies
+COPY package*.json ./
 
+# Install dependencies
+ENV REACT_APP_BACKEND_URL=http://localhost:8080/api/
 RUN npm ci
 
-ENV REACT_APP_BACKEND_URL=http://localhost:3001
+# Copy the rest of the application files
+COPY . .
+
+ENV NODE_ENV=production
 
 RUN CI=true npm test
 
@@ -16,7 +20,5 @@ RUN npm run build
 # This is a new stage, everything before this is gone, except the files we want to COPY
 
 FROM nginx:1.20-alpine
-# COPY the directory build from build-stage to /usr/share/nginx/html
-# The target location here was found from the Docker hub page
 
 COPY --from=build-stage /usr/src/app/build /usr/share/nginx/html

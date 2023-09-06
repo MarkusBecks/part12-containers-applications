@@ -1,0 +1,29 @@
+{
+  "name": "puhelinluettelo-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "build:ui": "rm -rf build && cd puhelinluettelo && npm install && npm run build && cp -r build ../build",
+    "eslint": "eslint './**/*.{js,jsx}'",
+    "test:e2e": "cypress run",
+    "test:manual": "cypress open"
+  },
+  "author": "Markus Becks",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.3",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "cypress": "^12.17.4",
+    "eslint": "^8.38.0",
+    "eslint-plugin-react": "^7.32.2",
+    "nodemon": "^2.0.22"
+  }
+}

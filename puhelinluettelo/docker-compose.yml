@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: the_database
+    volumes:
+      - ./backend/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+      - mongo_data:/data/db #Named volume: data managed by Docker
+    container_name: mongo-prod
+
+  #backend
+  backend:
+    image: backend-prod
+    build:
+      context: ./backend/
+      dockerfile: ./Dockerfile
+    ports:
+      - '3001:3001'
+    container_name: backend-prod
+    environment:
+      - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database
+      - PORT=3001
+    depends_on:
+      - mongo
+
+  #frontend
+  frontend:
+    image: frontend-prod
+    build:
+      context: ./frontend/
+      dockerfile: ./Dockerfile
+    ports:
+      - '3000:3000'
+    container_name: frontend-prod
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8080/api/persons
+
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - '8080:80'
+    container_name: reverse-proxy-prod
+    depends_on:
+      - backend
+      - frontend
+volumes:
+  mongo_data: #named volume for MongoDB data
